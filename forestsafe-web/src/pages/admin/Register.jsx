@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { UserPlus, Loader2, CheckCircle2 } from 'lucide-react';
+import { UserPlus, Loader2, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Button from '../../components/ui/Button';
 import { registerUser } from '../../services/apiService';
@@ -11,6 +11,7 @@ export default function Register() {
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState('staff');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -94,15 +95,25 @@ export default function Register() {
           <label htmlFor="reg-password" className="block text-sm font-medium text-neutral-700 mb-1.5">
             {t('admin.password')}
           </label>
-          <input
-            id="reg-password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder={t('admin.passwordPlaceholder')}
-            autoComplete="new-password"
-            className="w-full h-11 rounded-md border border-neutral-200 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-          />
+          <div className="relative">
+            <input
+              id="reg-password"
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={t('admin.passwordPlaceholder')}
+              autoComplete="new-password"
+              className="w-full h-11 rounded-md border border-neutral-200 px-4 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="absolute inset-y-0 right-3 flex items-center text-neutral-400 hover:text-neutral-600"
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
           <p className="text-xs text-neutral-400 mt-1">{t('admin.minPassword')}</p>
         </div>
 

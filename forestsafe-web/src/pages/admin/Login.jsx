@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Lock, Loader2, Trees } from 'lucide-react';
+import { Lock, Loader2, Trees, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import Button from '../../components/ui/Button';
@@ -13,6 +13,7 @@ export default function Login() {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -88,17 +89,27 @@ export default function Login() {
               <label htmlFor="password" className="block text-sm font-medium text-neutral-700 mb-1.5">
                 {t('admin.password')}
               </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => { setPassword(e.target.value); setError(''); }}
-                placeholder={t('admin.passwordPlaceholder')}
-                autoComplete="current-password"
-                className={`w-full h-11 rounded-md border px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 ${
-                  error ? 'border-danger-500 bg-danger-50' : 'border-neutral-200'
-                }`}
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => { setPassword(e.target.value); setError(''); }}
+                  placeholder={t('admin.passwordPlaceholder')}
+                  autoComplete="current-password"
+                  className={`w-full h-11 rounded-md border px-4 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 ${
+                    error ? 'border-danger-500 bg-danger-50' : 'border-neutral-200'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute inset-y-0 right-3 flex items-center text-neutral-400 hover:text-neutral-600"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
           </div>
 
