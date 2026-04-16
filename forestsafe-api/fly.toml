@@ -1,0 +1,41 @@
+app = "forestsafe-api"
+primary_region = "cdg"
+
+[build]
+
+[env]
+  PORT = "3001"
+  NODE_ENV = "production"
+
+[[mounts]]
+  source = "firesafe_data"
+  destination = "/app/data"
+
+[[mounts]]
+  source = "firesafe_uploads"
+  destination = "/app/uploads"
+
+[[services]]
+  internal_port = 3001
+  protocol = "tcp"
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
