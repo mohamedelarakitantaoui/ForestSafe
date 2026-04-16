@@ -13,7 +13,7 @@ import Button from '../../components/ui/Button';
 import Skeleton from '../../components/ui/Skeleton';
 import {
   adminGetReport, adminUpdateStatus, adminAssignReport,
-  adminResolveReport, getStaffList,
+  adminResolveReport, getStaffList, adminDeleteReport,
 } from '../../services/apiService';
 import '../../utils/leafletIcon';
 
@@ -61,6 +61,8 @@ export default function IncidentDetail() {
   const [resolutionNotes, setResolutionNotes] = useState('');
   const [resolving, setResolving] = useState(false);
   const [statusUpdating, setStatusUpdating] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -127,6 +129,19 @@ export default function IncidentDetail() {
     }
   };
 
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await adminDeleteReport(id);
+      toast.success('Report deleted');
+      navigate('/admin/incidents', { replace: true });
+    } catch (err) {
+      toast.error(err.message || 'Delete failed');
+      setDeleting(false);
+      setConfirmDelete(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -181,6 +196,31 @@ export default function IncidentDetail() {
         <div className="flex items-center gap-2 flex-wrap">
           <Badge variant={urg.badge}>{t(urg.labelKey)}</Badge>
           <Badge variant={status.badge}>{t(status.labelKey)}</Badge>
+          {confirmDelete ? (
+            <span className="inline-flex items-center gap-1 ml-2">
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="px-3 py-1.5 rounded-lg text-xs font-medium bg-danger-600 text-white hover:bg-danger-700 disabled:opacity-50"
+              >
+                {deleting ? <Loader2 className="w-3 h-3 animate-spin inline mr-1" /> : null}
+                Confirm delete
+              </button>
+              <button
+                onClick={() => setConfirmDelete(false)}
+                className="px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 hover:bg-neutral-50"
+              >
+                Cancel
+              </button>
+            </span>
+          ) : (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="ml-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-danger-600 border border-danger-200 hover:bg-danger-50 transition-colors"
+            >
+              <Trash2 className="w-3.5 h-3.5" /> Delete
+            </button>
+          )}
         </div>
       </div>
 

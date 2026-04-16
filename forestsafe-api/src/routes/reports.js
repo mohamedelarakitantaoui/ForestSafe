@@ -84,6 +84,8 @@ const stmts = {
   resolveReport: db.prepare('UPDATE reports SET status = ?, resolution_notes = ?, resolved_at = ?, assigned_to = COALESCE(?, assigned_to) WHERE id = ?'),
   insertAudit: db.prepare('INSERT INTO audit_log (report_id, action, performed_by, details) VALUES (?, ?, ?, ?)'),
   getAuditForReport: db.prepare('SELECT * FROM audit_log WHERE report_id = ? ORDER BY created_at DESC'),
+  deleteReport: db.prepare('DELETE FROM reports WHERE id = ?'),
+  deleteAudit: db.prepare('DELETE FROM audit_log WHERE report_id = ?'),
 };
 
 // ── Column mapping ────────────────────────────────────────────────────────────
@@ -340,6 +342,20 @@ router.patch('/admin/:id/resolve', requireAuth, requireRole('admin', 'staff', 's
 
     const row = stmts.getById.get(req.params.id);
     res.json(mapRow(row, true));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── DELETE /api/reports/admin/:id ───────────────────────────────────────────
+
+router.delete('/admin/:id', requireAuth, requireRole('admin', 'superadmin'), (req, res) => {
+  try {
+    const row = stmts.getById.get(req.params.id);
+    if (!row) return res.status(404).json({ error: 'Report not found' });
+    stmts.deleteAudit.run(req.params.id);
+    stmts.deleteReport.run(req.params.id);
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

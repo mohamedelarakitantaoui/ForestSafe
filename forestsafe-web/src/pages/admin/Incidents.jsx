@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import {
   Flame, Trash2, AlertTriangle, ExternalLink,
   ChevronUp, ChevronDown, ChevronsUpDown,
-  ChevronLeft, ChevronRight, Search, X, Filter,
+  ChevronLeft, ChevronRight, Search, X, Filter, Loader2,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 import Badge from '../../components/ui/Badge';
 import Skeleton from '../../components/ui/Skeleton';
-import { adminGetAllReports } from '../../services/apiService';
+import { adminGetAllReports, adminDeleteReport } from '../../services/apiService';
 
 /* ───── constants ───── */
 
@@ -36,7 +37,7 @@ const STATUS_META = {
 /* ───── helpers ───── */
 
 function formatDate(iso) {
-  if (!iso) return 'â€”';
+  if (!iso) return '—';
   return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
@@ -66,6 +67,8 @@ export default function Incidents() {
 
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
+  const [confirmId, setConfirmId] = useState(null);
 
   /* filters */
   const [search, setSearch] = useState('');
@@ -208,11 +211,12 @@ export default function Incidents() {
                 <th className="text-left px-5 py-3"><SortHeader label={t('admin.urgency')} field="urgency" sortField={sortField} sortDir={sortDir} onSort={handleSort} /></th>
                 <th className="text-left px-5 py-3"><SortHeader label={t('admin.status')} field="status" sortField={sortField} sortDir={sortDir} onSort={handleSort} /></th>
                 <th className="text-left px-5 py-3 whitespace-nowrap">{t('admin.location')}</th>
+                <th className="px-5 py-3" />
               </tr>
             </thead>
             <tbody>
               {pageData.length === 0 && (
-                <tr><td colSpan={7} className="text-center py-12 text-neutral-400">{t('admin.noReports')}</td></tr>
+                <tr><td colSpan={8} className="text-center py-12 text-neutral-400">{t('admin.noReports')}</td></tr>
               )}
               {pageData.map((r) => {
                 const meta = TYPE_META[r.type] || TYPE_META.other;
@@ -221,12 +225,12 @@ export default function Incidents() {
                 return (
                   <tr key={r.id} className="border-b border-neutral-50 hover:bg-neutral-50/70 transition-colors">
                     <td className="px-5 py-3 whitespace-nowrap text-neutral-600">{formatDate(r.createdAt)}</td>
-                    <td className="px-5 py-3">
+                    <td className="px-5 py-3 whitespace-nowrap font-mono text-xs">
                       <Link
                         to={`/admin/incidents/${r.id}`}
-                        className="font-mono text-xs text-primary-600 hover:text-primary-700 font-medium"
+                        className="text-primary-600 hover:text-primary-700 font-medium"
                       >
-                        {r.trackingCode || 'â€”'}
+                        {r.trackingCode || '—'}
                       </Link>
                     </td>
                     <td className="px-5 py-3">
@@ -239,7 +243,7 @@ export default function Incidents() {
                     </td>
                     <td className="px-5 py-3">
                       <div className="min-w-0">
-                        <p className="text-neutral-800 truncate max-w-[150px]">{r.reporterName || 'â€”'}</p>
+                        <p className="text-neutral-800 truncate max-w-[150px]">{r.reporterName || '—'}</p>
                         {r.reporterId && <p className="text-[10px] text-neutral-400 font-mono">{r.reporterId}</p>}
                       </div>
                     </td>
@@ -257,7 +261,34 @@ export default function Incidents() {
                           {r.lat.toFixed(3)}, {r.lng.toFixed(3)}
                           <ExternalLink className="w-3 h-3" />
                         </a>
-                      ) : 'â€”'}
+                      ) : '—'}
+                    </td>
+                    <td className="px-5 py-3 text-right">
+                      {confirmId === r.id ? (
+                        <span className="inline-flex items-center gap-1">
+                          <button
+                            onClick={() => handleDelete(r.id)}
+                            disabled={deletingId === r.id}
+                            className="px-2 py-1 rounded text-xs font-medium bg-danger-600 text-white hover:bg-danger-700 disabled:opacity-50"
+                          >
+                            {deletingId === r.id ? <Loader2 className="w-3 h-3 animate-spin inline" /> : 'Confirm'}
+                          </button>
+                          <button
+                            onClick={() => setConfirmId(null)}
+                            className="px-2 py-1 rounded text-xs font-medium border border-neutral-200 hover:bg-neutral-100"
+                          >
+                            Cancel
+                          </button>
+                        </span>
+                      ) : (
+                        <button
+                          onClick={(e) => { e.preventDefault(); setConfirmId(r.id); }}
+                          className="w-7 h-7 rounded-lg grid place-items-center text-neutral-300 hover:text-danger-600 hover:bg-danger-50 transition-colors"
+                          title="Delete report"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                     </td>
                   </tr>
                 );
@@ -289,7 +320,7 @@ export default function Incidents() {
                 }, [])
                 .map((p, i) =>
                   p === '...' ? (
-                    <span key={`e${i}`} className="px-1 text-neutral-300">â€¦</span>
+                    <span key={`e${i}`} className="px-1 text-neutral-300">…</span>
                   ) : (
                     <button
                       key={p}

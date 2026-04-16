@@ -97,6 +97,10 @@ export async function adminResolveReport(id, { resolutionNotes, assignedTo }) {
   });
 }
 
+export async function adminDeleteReport(id) {
+  return request(`/reports/admin/${id}`, { method: 'DELETE' });
+}
+
 // ── Auth endpoints ────────────────────────────────────────────────────────────
 
 export async function getStaffList() {
