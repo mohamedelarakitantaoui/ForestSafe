@@ -3,14 +3,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-dotenv.config();
-
-// Run DB migrations on every startup so tables always exist
-await import('./db/migrate.js');
-
 import reportsRouter from './routes/reports.js';
 import authRouter from './routes/auth.js';
+
+dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
