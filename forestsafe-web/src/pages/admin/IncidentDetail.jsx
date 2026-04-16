@@ -39,7 +39,7 @@ const STATUS_META = {
 };
 
 function formatDate(iso) {
-  if (!iso) return 'â€”';
+  if (!iso) return '—';
   return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
@@ -185,7 +185,7 @@ export default function IncidentDetail() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main content â€” 2 cols */}
+        {/* Main content — 2 cols */}
         <div className="lg:col-span-2 space-y-6">
           {/* Description */}
           <section className="bg-white rounded-lg border border-neutral-100 p-6">
@@ -247,7 +247,7 @@ export default function IncidentDetail() {
                     <div>
                       <p className="text-neutral-700">
                         <span className="font-medium">{entry.performedBy || entry.performed_by}</span>
-                        {' â€” '}
+                        {' — '}
                         {entry.action}
                       </p>
                       {entry.details && <p className="text-xs text-neutral-400 mt-0.5">{entry.details}</p>}
@@ -260,7 +260,7 @@ export default function IncidentDetail() {
           )}
         </div>
 
-        {/* Sidebar â€” 1 col */}
+        {/* Sidebar — 1 col */}
         <div className="space-y-6">
           {/* Reporter info */}
           <section className="bg-white rounded-lg border border-neutral-100 p-5">
@@ -270,11 +270,11 @@ export default function IncidentDetail() {
             <dl className="space-y-2 text-sm">
               <div>
                 <dt className="text-neutral-400 text-xs">{t('report.fullName')}</dt>
-                <dd className="text-neutral-800 font-medium">{report.reporterName || report.reporter_name || 'â€”'}</dd>
+                <dd className="text-neutral-800 font-medium">{report.reporterName || report.reporter_name || '—'}</dd>
               </div>
               <div>
                 <dt className="text-neutral-400 text-xs">{t('report.idNumber')}</dt>
-                <dd className="text-neutral-800 font-mono text-xs">{report.reporterId || report.reporter_id || 'â€”'}</dd>
+                <dd className="text-neutral-800 font-mono text-xs">{report.reporterId || report.reporter_id || '—'}</dd>
               </div>
               <div>
                 <dt className="text-neutral-400 text-xs">{t('admin.channel')}</dt>
