@@ -2,7 +2,7 @@ const KEY = 'forestsafe_reports';
 
 function readAll() {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = sessionStorage.getItem(KEY);
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -10,7 +10,7 @@ function readAll() {
 }
 
 function writeAll(list) {
-  localStorage.setItem(KEY, JSON.stringify(list));
+  sessionStorage.setItem(KEY, JSON.stringify(list));
 }
 
 function uid() {

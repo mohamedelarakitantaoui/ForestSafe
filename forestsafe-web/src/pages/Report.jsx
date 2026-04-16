@@ -165,7 +165,7 @@ export default function Report() {
   /* restore identity */
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('forestsafe_reporter');
+      const saved = sessionStorage.getItem('forestsafe_reporter');
       if (saved) {
         const { name, id } = JSON.parse(saved);
         if (name) setReporterName(name);
@@ -236,7 +236,7 @@ export default function Report() {
         for (const f of files) { urls.push(await uploadPhoto(f.file)); }
         photoUrl = urls.join(',');
       }
-      localStorage.setItem('forestsafe_reporter', JSON.stringify({ name: reporterName.trim(), id: reporterId.trim() }));
+      sessionStorage.setItem('forestsafe_reporter', JSON.stringify({ name: reporterName.trim(), id: reporterId.trim() }));
       const result = await createReport({
         type,
         urgency: urgency || 'low',

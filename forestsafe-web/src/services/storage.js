@@ -12,7 +12,7 @@ function isOnline() {
 
 function checkClientRateLimit() {
   try {
-    const raw = localStorage.getItem(RATE_KEY);
+    const raw = sessionStorage.getItem(RATE_KEY);
     const timestamps = raw ? JSON.parse(raw) : [];
     const now = Date.now();
     const valid = timestamps.filter((ts) => now - ts < RATE_WINDOW_MS);
@@ -20,7 +20,7 @@ function checkClientRateLimit() {
       return false;
     }
     valid.push(now);
-    localStorage.setItem(RATE_KEY, JSON.stringify(valid));
+    sessionStorage.setItem(RATE_KEY, JSON.stringify(valid));
     return true;
   } catch {
     return true;
@@ -82,7 +82,7 @@ export async function trackReports(params) {
 
 export function getPendingLocalReports() {
   try {
-    const raw = localStorage.getItem(LOCAL_KEY);
+    const raw = sessionStorage.getItem(LOCAL_KEY);
     const list = raw ? JSON.parse(raw) : [];
     return list.filter((r) => r._localOnly);
   } catch {
@@ -107,10 +107,10 @@ export async function syncPendingReports() {
 
   // Remove synced reports from local storage
   try {
-    const raw = localStorage.getItem(LOCAL_KEY);
+    const raw = sessionStorage.getItem(LOCAL_KEY);
     const list = raw ? JSON.parse(raw) : [];
     const remaining = list.filter((r) => !r._localOnly);
-    localStorage.setItem(LOCAL_KEY, JSON.stringify(remaining));
+    sessionStorage.setItem(LOCAL_KEY, JSON.stringify(remaining));
   } catch {
     // ignore
   }

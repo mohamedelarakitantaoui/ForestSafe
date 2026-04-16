@@ -24,18 +24,18 @@ export function AuthProvider({ children }) {
     const data = await res.json();
     setUser(data.user);
     setToken(data.accessToken);
-    localStorage.setItem(TOKEN_KEY, data.refreshToken);
+    sessionStorage.setItem(TOKEN_KEY, data.refreshToken);
     return data.user;
   }, [BASE_URL]);
 
   const logout = useCallback(() => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
   }, []);
 
   const refresh = useCallback(async () => {
-    const refreshToken = localStorage.getItem(TOKEN_KEY);
+    const refreshToken = sessionStorage.getItem(TOKEN_KEY);
     if (!refreshToken) {
       setLoading(false);
       return null;
@@ -50,10 +50,10 @@ export function AuthProvider({ children }) {
       const data = await res.json();
       setUser(data.user);
       setToken(data.accessToken);
-      localStorage.setItem(TOKEN_KEY, data.refreshToken);
+      sessionStorage.setItem(TOKEN_KEY, data.refreshToken);
       return data.accessToken;
     } catch {
-      localStorage.removeItem(TOKEN_KEY);
+      sessionStorage.removeItem(TOKEN_KEY);
       setUser(null);
       setToken(null);
       return null;

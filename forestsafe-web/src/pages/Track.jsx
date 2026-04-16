@@ -171,7 +171,7 @@ export default function Track() {
   /* Pre-fill from saved identity */
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('forestsafe_reporter');
+      const saved = sessionStorage.getItem('forestsafe_reporter');
       if (saved) {
         const { id } = JSON.parse(saved);
         if (id) setIdInput(id);
