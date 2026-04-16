@@ -10,7 +10,7 @@ import Badge from '../../components/ui/Badge';
 import Skeleton from '../../components/ui/Skeleton';
 import { adminGetAllReports } from '../../services/apiService';
 
-/* â”€â”€â”€â”€â”€ constants â”€â”€â”€â”€â”€ */
+/* ───── constants ───── */
 
 const PER_PAGE = 15;
 
@@ -33,14 +33,14 @@ const STATUS_META = {
   failed: { badge: 'failed', labelKey: 'status.failed' },
 };
 
-/* â”€â”€â”€â”€â”€ helpers â”€â”€â”€â”€â”€ */
+/* ───── helpers ───── */
 
 function formatDate(iso) {
   if (!iso) return 'â€”';
   return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-/* â”€â”€â”€â”€â”€ sortable header â”€â”€â”€â”€â”€ */
+/* ───── sortable header ───── */
 
 function SortHeader({ label, field, sortField, sortDir, onSort }) {
   const active = sortField === field;
@@ -59,7 +59,7 @@ function SortHeader({ label, field, sortField, sortDir, onSort }) {
   );
 }
 
-/* â”€â”€â”€â”€â”€ main â”€â”€â”€â”€â”€ */
+/* ───── main ───── */
 
 export default function Incidents() {
   const { t } = useTranslation();
@@ -270,7 +270,7 @@ export default function Incidents() {
         {totalPages > 1 && (
           <div className="flex items-center justify-between px-5 py-3 border-t border-neutral-100 text-sm">
             <p className="text-neutral-400">
-              {t('admin.page')} {page} {t('admin.of')} {totalPages} Â· {sorted.length} {t('admin.reports')}
+              {t('admin.page')} {page} {t('admin.of')} {totalPages} · {sorted.length} {t('admin.reports')}
             </p>
             <div className="flex items-center gap-1">
               <button

@@ -13,7 +13,7 @@ import Badge from '../../components/ui/Badge';
 import Skeleton from '../../components/ui/Skeleton';
 import { adminGetAllReports } from '../../services/apiService';
 
-/* â”€â”€â”€â”€â”€ constants â”€â”€â”€â”€â”€ */
+/* ───── constants ───── */
 
 const TYPE_META = {
   fire: { labelKey: 'types.fire', color: '#dc2626', Icon: Flame, iconCls: 'text-danger-600 bg-danger-50' },
@@ -36,7 +36,7 @@ const STATUS_META = {
 
 const PIE_COLORS = { low: '#16a34a', medium: '#ea580c', high: '#dc2626' };
 
-/* â”€â”€â”€â”€â”€ helpers â”€â”€â”€â”€â”€ */
+/* ───── helpers ───── */
 
 function formatDate(iso) {
   if (!iso) return 'â€”';
@@ -48,7 +48,7 @@ function dayKey(iso) {
   return `${d.getMonth() + 1}/${d.getDate()}`;
 }
 
-/* â”€â”€â”€â”€â”€ dashboard â”€â”€â”€â”€â”€ */
+/* ───── dashboard ───── */
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -226,7 +226,7 @@ export default function Dashboard() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-neutral-800 truncate">
                     {t(meta.labelKey)}
-                    {r.reporterName && <span className="text-neutral-400 font-normal"> Â· {r.reporterName}</span>}
+                    {r.reporterName && <span className="text-neutral-400 font-normal"> · {r.reporterName}</span>}
                   </p>
                   <p className="text-xs text-neutral-400 truncate">{r.description}</p>
                 </div>

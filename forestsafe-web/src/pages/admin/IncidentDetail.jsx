@@ -17,7 +17,7 @@ import {
 } from '../../services/apiService';
 import '../../utils/leafletIcon';
 
-/* â”€â”€â”€â”€â”€ constants â”€â”€â”€â”€â”€ */
+/* ───── constants ───── */
 
 const TYPE_META = {
   fire: { labelKey: 'types.fire', emoji: '🔥', Icon: Flame, iconCls: 'text-danger-600 bg-danger-50' },
@@ -43,7 +43,7 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
-/* â”€â”€â”€â”€â”€ main â”€â”€â”€â”€â”€ */
+/* ───── main ───── */
 
 export default function IncidentDetail() {
   const { id } = useParams();
@@ -228,7 +228,7 @@ export default function IncidentDetail() {
                   rel="noopener noreferrer"
                   className="ml-2 text-primary-600 hover:text-primary-700"
                 >
-                  Google Maps â†—
+                  Google Maps ↗
                 </a>
               </p>
             </section>
