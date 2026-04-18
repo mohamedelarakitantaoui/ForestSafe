@@ -149,6 +149,20 @@ export default function Incidents() {
   const hasFilters = filterType || filterStatus || filterUrgency || search;
   const clearFilters = () => { setFilterType(''); setFilterStatus(''); setFilterUrgency(''); setSearch(''); setPage(1); };
 
+  const handleDelete = async (id) => {
+    setDeletingId(id);
+    try {
+      await adminDeleteReport(id);
+      setReports((prev) => prev.filter((r) => r.id !== id));
+      toast.success('Report deleted');
+      setConfirmId(null);
+    } catch (err) {
+      toast.error(err.message || 'Delete failed');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
