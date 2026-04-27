@@ -10,6 +10,7 @@ import LocationPicker from '../components/LocationPicker';
 import Button from '../components/ui/Button';
 import { uploadPhoto, createReport } from '../services/storage';
 import { getCurrentPosition } from '../services/geolocation';
+import { compressImage } from '../utils/compressImage';
 
 /* ───── constants ───── */
 
@@ -232,8 +233,12 @@ export default function Report() {
     try {
       let photoUrl = null;
       if (files.length > 0) {
-        const urls = [];
-        for (const f of files) { urls.push(await uploadPhoto(f.file)); }
+        const urls = await Promise.all(
+          files.map(async (f) => {
+            const toSend = f.isVideo ? f.file : await compressImage(f.file);
+            return uploadPhoto(toSend);
+          }),
+        );
         photoUrl = urls.join(',');
       }
       sessionStorage.setItem('forestsafe_reporter', JSON.stringify({ name: reporterName.trim(), id: reporterId.trim() }));
