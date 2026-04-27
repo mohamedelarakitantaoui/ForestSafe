@@ -39,8 +39,10 @@ setInterval(() => {
 
 // ── File upload config ────────────────────────────────────────────────────────
 
+const uploadsDir = process.env.UPLOADS_DIR || path.join(__dirname, '..', '..', 'uploads');
+
 const storage = multer.diskStorage({
-  destination: path.join(__dirname, '..', '..', 'uploads'),
+  destination: uploadsDir,
   filename: (_req, file, cb) => {
     const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
     cb(null, `${Date.now()}-${safeName}`);

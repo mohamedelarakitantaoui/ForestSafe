@@ -3,12 +3,17 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 import reportsRouter from './routes/reports.js';
 import authRouter from './routes/auth.js';
 
 dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const uploadsDir = process.env.UPLOADS_DIR || path.join(__dirname, '..', 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -28,7 +33,7 @@ app.use(cors({
 app.use(express.json());
 
 // Serve uploaded files as static assets
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use('/uploads', express.static(uploadsDir));
 
 app.use('/api/reports', reportsRouter);
 app.use('/api/auth', authRouter);

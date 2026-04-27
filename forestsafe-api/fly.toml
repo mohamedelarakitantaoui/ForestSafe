@@ -1,41 +1,54 @@
-app = "forestsafe-api"
-primary_region = "cdg"
+# fly.toml app configuration file generated for forestsafe-api on 2026-04-27T11:54:38+01:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'forestsafe-api'
+primary_region = 'cdg'
 
 [build]
 
 [env]
-  PORT = "3001"
-  NODE_ENV = "production"
+  NODE_ENV = 'production'
+  PORT = '3001'
+  DATA_DIR = '/app/storage/data'
+  UPLOADS_DIR = '/app/storage/uploads'
 
 [[mounts]]
-  source = "firesafe_data"
-  destination = "/app/data"
+  source = 'firesafe_data'
+  destination = '/app/storage'
 
-[[mounts]]
-  source = "firesafe_uploads"
-  destination = "/app/uploads"
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
 
 [[services]]
+  protocol = 'tcp'
   internal_port = 3001
-  protocol = "tcp"
-  auto_stop_machines = true
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
 
   [[services.ports]]
     port = 80
-    handlers = ["http"]
+    handlers = ['http']
     force_https = true
 
   [[services.ports]]
     port = 443
-    handlers = ["tls", "http"]
+    handlers = ['tls', 'http']
 
   [services.concurrency]
-    type = "connections"
+    type = 'connections'
     hard_limit = 25
     soft_limit = 20
 
 [[vm]]
-  size = "shared-cpu-1x"
-  memory = "256mb"
+  size = 'shared-cpu-1x'
+  memory = '256mb'
+  cpus = 1
+  memory_mb = 256
